@@ -1,76 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>prayer-time</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>prayer-time</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1 id="city">casabal</h1>
-    <div id="time">jomo3a </div>
-    <div class="container">
-        <div id="card">
-            <div class="header">
-                <h3>fajr</h3></div>
-            
-            <div class="body">
-                <h3 class="prayer-time">4.20</h3>
-            </div>
+  <h1 id="city">أوقات الصلاة: Casablanca</h1>
+  <div id="time"></div>
 
-        </div>
-
-         <div id="card">
-            <div class="header">
-                <h3>shorok</h3></div>
-            
-            <div class="body">
-                <h3 class="prayer-time">4.20</h3>
-            </div>
-
-        </div>
-         <div id="card">
-            <div class="header">
-                <h3>dohr</h3></div>
-            
-            <div class="body">
-                <h3 class="prayer-time">4.20</h3>
-            </div>
-
-        </div>
-         <div id="card">
-            <div class="header">
-                <h3>3asr</h3></div>
-            
-            <div class="body">
-                <h3 class="prayer-time">4.20</h3>
-            </div>
-
-        </div>
-         <div id="card">
-            <div class="header">
-                <h3>maghrib</h3></div>
-            
-            <div class="body">
-                <h3 class="prayer-time">4.20</h3>
-            </div>
-
-        </div>
-         <div id="card">
-            <div class="header">
-                <h3>3icha</h3></div>
-            
-            <div class="body">
-                <h3 class="prayer-time">4.20</h3>
-            </div>
-
-        </div>
-
-
+  <div class="container">
+    <div id="card">
+      <div class="header"><h3>Fajr</h3></div>
+      <div class="body"><h3 id="fajr">--</h3></div>
     </div>
-    
-        <select name="" id="cities">
-            <option value="" id="cityName"></option>
-        </select>
+
+    <div id="card">
+      <div class="header"><h3>Shorouq</h3></div>
+      <div class="body"><h3 id="shorouq">--</h3></div>
+    </div>
+
+    <div id="card">
+      <div class="header"><h3>Dhuhr</h3></div>
+      <div class="body"><h3 id="dhuhr">--</h3></div>
+    </div>
+
+    <div id="card">
+      <div class="header"><h3>Asr</h3></div>
+      <div class="body"><h3 id="asr">--</h3></div>
+    </div>
+
+    <div id="card">
+      <div class="header"><h3>Maghrib</h3></div>
+      <div class="body"><h3 id="maghrib">--</h3></div>
+    </div>
+
+    <div id="card">
+      <div class="header"><h3>Isha</h3></div>
+      <div class="body"><h3 id="isha">--</h3></div>
+    </div>
+  </div>
+
+  <!-- smiya dial mdina -->
+   <div class="search">
+   <h2 style="color: white;">search for city:</h2><br>
+  <input type="text" id="cityInput" placeholder="kteb chi mdina (casablanca...)">
+  <button onclick="updateCity()">search</button>
+</div>
+  <script>
+    async function getPrayerTimes(mdina) {
+      try {
+        const url = `https://api.aladhan.com/v1/timingsByCity?city=${mdina}&country=Morocco`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const timings = data.data.timings;
+
+        document.getElementById("fajr").textContent    = timings.Fajr;
+        document.getElementById("shorouq").textContent = timings.Sunrise;
+        document.getElementById("dhuhr").textContent   = timings.Dhuhr;
+        document.getElementById("asr").textContent     = timings.Asr;
+        document.getElementById("maghrib").textContent = timings.Maghrib;
+        document.getElementById("isha").textContent    = timings.Isha;
+
+        document.getElementById("time").textContent = data.data.date.readable;
+        document.getElementById("city").textContent = `أوقات الصلاة: ${mdina}`;
+      } catch (error) {
+        alert("city not found");
+        console.error(error);
+      }
+    }
+
+    function updateCity() {
+      const city = document.getElementById("cityInput").value.trim();
+      if (city) {
+        getPrayerTimes(city);
+      } else {
+        alert("please kteb mdina");
+      }
+    }
+
+    // Call once when page loads
+    getPrayerTimes("Casablanca");
+  </script>
 </body>
 </html>
